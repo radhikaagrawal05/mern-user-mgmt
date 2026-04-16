@@ -49,6 +49,9 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Health check
+app.get("/", (req, res) => {
+  res.send("MERN User Management API is running");
+});
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
