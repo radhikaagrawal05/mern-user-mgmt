@@ -26,25 +26,14 @@ app.use(helmet());
 const allowedOrigins = [
   'https://mern-user-mgmt.vercel.app'
 ];
-
 app.use(cors({
-  origin: function (origin, callback) {
-    // allow requests with no origin (Postman/mobile apps)
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: "https://mern-user-mgmt.vercel.app",
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"],
+  allowedHeaders: ["Content-Type","Authorization"]
 }));
 
-// Handle preflight requests
-app.options('*', cors());
+app.options(/.*/, cors());
 
 // Rate limiting
 const limiter = rateLimit({
@@ -59,7 +48,10 @@ const authLimiter = rateLimit({
   message: { message: 'Too many login attempts, please try again later.' }
 });
 
-app.use('/api/', limiter);
+app.use('/api/', (req, res, next) => {
+  if (req.method === "OPTIONS") return next();
+  limiter(req, res, next);
+});
 app.use('/api/auth', authLimiter);
 
 // Body parsing
