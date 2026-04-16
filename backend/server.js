@@ -19,7 +19,7 @@ connectDB();
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: ["https://mern-user-mgmt.vercel.app/"],
+  origin: ["https://mern-user-mgmt.vercel.app"],
   credentials: true,
 }));
 
